@@ -1850,6 +1850,7 @@ class CourseRegCodeItem(OrderItem):
         return data
 
 
+@six.python_2_unicode_compatible  # pylint: disable=model-missing-unicode
 class CourseRegCodeItemAnnotation(models.Model):
     """
     A model that maps course_id to an additional annotation.  This is specifically needed because when Stanford
@@ -1865,10 +1866,11 @@ class CourseRegCodeItemAnnotation(models.Model):
     course_id = CourseKeyField(unique=True, max_length=128, db_index=True)
     annotation = models.TextField(null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"{} : {}".format(text_type(self.course_id), self.annotation)
 
 
+@six.python_2_unicode_compatible  # pylint: disable=model-missing-unicode
 class PaidCourseRegistrationAnnotation(models.Model):
     """
     A model that maps course_id to an additional annotation.  This is specifically needed because when Stanford
@@ -1884,7 +1886,7 @@ class PaidCourseRegistrationAnnotation(models.Model):
     course_id = CourseKeyField(unique=True, max_length=128, db_index=True)
     annotation = models.TextField(null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"{} : {}".format(text_type(self.course_id), self.annotation)
 
 
