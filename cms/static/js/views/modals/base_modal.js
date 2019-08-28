@@ -178,8 +178,8 @@ define(['jquery', 'underscore', 'gettext', 'js/views/baseview'],
                 modalWindow = this.$el.find(this.options.modalWindowClass);
                 availableWidth = $(window).width();
                 availableHeight = $(window).height();
-                maxWidth = availableWidth * 0.80;
-                maxHeight = availableHeight * 0.80;
+                maxWidth = availableWidth * 0.98;
+                maxHeight = availableHeight * 0.98;
                 modalWidth = Math.min(modalWindow.outerWidth(), maxWidth);
                 modalHeight = Math.min(modalWindow.outerHeight(), maxHeight);
 
