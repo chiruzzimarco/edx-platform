@@ -219,6 +219,11 @@
           color: $blue-d4;
         }
       }
+      .clipboard-button {
+        position: absolute;
+        right: 30px;
+        bottom: 30px;
+      }
     }
   }
 
@@ -378,6 +383,9 @@
     }
   }
 
+  .modal-type-problem {
+    width: 95%;
+  }
 
   // MODAL TYPE: component - video modal (includes special overrides for xblock-related editing view)
   .modal-lg.modal-type-video {

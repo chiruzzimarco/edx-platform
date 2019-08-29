@@ -1,0 +1,4 @@
+<button class="action-button clipboard-button" data-tooltip="<%= gettext('Copy Location to Clipboard') %>">
+<i class="fa fa-copy"></i>
+<input class="sr" value="<%= location %>"/>
+</button>

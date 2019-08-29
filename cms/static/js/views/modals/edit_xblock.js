@@ -103,7 +103,15 @@ define(['jquery', 'underscore', 'backbone', 'gettext', 'js/views/modals/base_mod
                     }
                     this.getActionBar().show();
                 }
+                // Add the copy to clipboard button to the modal.
+                var copyButton = $(this.loadTemplate('copy-clipboard-button')({location: this.xblockInfo.get('id')}));
 
+                copyButton.click(function() {
+                    $(this).find('input').select();
+                    document.execCommand('copy');
+                    return false;
+                });
+                this.$('.modal-actions').append(copyButton);
                 // Resize the modal to fit the window
                 this.resize();
             },
