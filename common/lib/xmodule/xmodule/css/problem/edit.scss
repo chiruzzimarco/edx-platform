@@ -41,17 +41,13 @@
 
 .simple-editor-cheatsheet {
   position: absolute;
-  top: 0;
-  left: 100%;
+  top: 41px;
+  left: 82%;
   width: 0;
-  border-radius: 0 3px 3px 0;
+  border-left: 1px solid $gray-l2;
 
-  @include linear-gradient(left, $shadow-l1, $transparent 4px);
-
-  background-color: $white;
+  background-color: $lightGrey;
   overflow: hidden;
-
-  @include transition(width 0.3s linear 0s);
 
   &.shown {
     width: 20%;
@@ -110,6 +106,7 @@
   // adding padding to simple editor only - adjacent selector is needed since there are no toggles for CodeMirror
   .markdown-box + .CodeMirror {
     padding: 10px;
+    width: 80%;
   }
 }
 
