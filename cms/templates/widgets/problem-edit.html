@@ -72,7 +72,6 @@
             </ul>
             <ul class="editor-tabs">
                 <li><button type="button" class="xml-tab advanced-toggle" data-tab="xml">${_("Advanced Editor")}</button></li>
-                <!-- <li><button type="button" class="cheatsheet-toggle" data-tooltip="${_("Toggle Cheatsheet")}">?</button></li> -->
             </ul>
         </div>
         <textarea class="markdown-box">${markdown | h}</textarea>
@@ -82,9 +81,9 @@
                         <h5>${_("Markdown Help")}</h5>
                     </div>
                     <div class="row">
-                        <h6>${_("Heading")}</h6>
                         <div class="col sample heading-1">
                             <img class="icon" src="${static.url('images/cms-editor_heading.png')}" alt="${_("Insert a heading")}">
+                            <h6>${_("Heading")}</h6>
                         </div>
                         <div class="col">
 <pre><code>H3
@@ -93,9 +92,9 @@
                         </div>
                     </div>
                     <div class="row">
-                        <h6>${_("Multiple Choice")}</h6>
                         <div class="col sample multiple-choice">
                             <img class="icon" src="${static.url('images/cms-editor_radio.png')}" alt="${_("Add a multiple choice question")}">
+                            <h6>${_("Multiple Choice")}</h6>
                         </div>
                         <div class="col">
 <pre><code>( ) red
@@ -104,9 +103,9 @@
                         </div>
                     </div>
                     <div class="row">
-                        <h6>${_("Checkboxes")}</h6>
                         <div class="col sample check-multiple">
                             <img class="icon" src="${static.url('images/cms-editor_checkbox.png')}" alt="${_("Add a question with checkboxes")}">
+                            <h6>${_("Checkboxes")}</h6>
                         </div>
                         <div class="col">
 <pre><code>[x] earth
@@ -115,9 +114,9 @@
                         </div>
                     </div>
                     <div class="row">
-                        <h6>${_("Text Input")}</h6>
                         <div class="col sample string-response">
                             <img class="icon" src="${static.url('images/cms-editor_text.png')}" alt="${_("Insert a text response")}">
+                            <h6>${_("Text Input")}</h6>
                         </div>
                         <div class="col">
                     <pre><code>= dog
@@ -126,9 +125,9 @@ or= mouse</code></pre>
                         </div>
                     </div>
                     <div class="row">
-                        <h6>${_("Numerical Input")}</h6>
                         <div class="col sample numerical-response">
                             <img class="icon" src="${static.url('images/cms-editor_number.png')}" alt="${_("Insert a numerical response")}">
+                            <h6>${_("Numerical Input")}</h6>
                         </div>
                         <div class="col">
                             <pre><code>= 3.14 +- 2%</code></pre>
@@ -136,9 +135,9 @@ or= mouse</code></pre>
                         </div>
                     </div>
                     <div class="row">
-                        <h6>${_("Dropdown")}</h6>
                         <div class="col sample option-reponse">
                             <img class="icon" src="${static.url('images/cms-editor_dropdown.png')}" alt="${_("Insert a dropdown response")}">
+                            <h6>${_("Dropdown")}</h6>
                         </div>
                         <div class="col">
                             <pre><code>[[wrong, (right)]]</code></pre>
@@ -151,9 +150,9 @@ or= mouse</code></pre>
                         </div>
                     </div>
                     <div class="row">
-                        <h6>${_("Explanation")}</h6>
                         <div class="col sample explanation">
                             <img class="icon" src="${static.url('images/cms-editor_explanation.png')}" alt="${_("Add an explanation for this question")}">
+                            <h6>${_("Explanation")}</h6>
                         </div>
                         <div class="col">
                             <pre><code>[explanation] A short explanation of the answer. [explanation]</code></pre>

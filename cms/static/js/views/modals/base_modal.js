@@ -22,8 +22,8 @@
  *   primaryActionButtonTitle: A string to be used as title for primary action button.
  *   showEditorModeButtons: Whether to show editor mode button in the modal header.
  */
-define(['jquery', 'underscore', 'gettext', 'js/views/baseview'],
-    function($, _, gettext, BaseView) {
+define(['jquery', 'underscore', 'gettext', 'js/views/baseview', 'edx-ui-toolkit/js/utils/html-utils'],
+    function($, _, gettext, BaseView, HtmlUtils) {
         var BaseModal = BaseView.extend({
             events: {
                 'click .action-cancel': 'cancel'
@@ -63,7 +63,7 @@ define(['jquery', 'underscore', 'gettext', 'js/views/baseview'],
             },
 
             render: function() {
-                this.$el.html(this.modalTemplate({
+                HtmlUtils.setHtml(this.$el, this.modalTemplate({
                     name: this.options.modalName,
                     type: this.options.modalType,
                     size: this.options.modalSize,
@@ -83,7 +83,7 @@ define(['jquery', 'underscore', 'gettext', 'js/views/baseview'],
 
             renderContents: function() {
                 var contentHtml = this.getContentHtml();
-                this.$('.modal-content').html(contentHtml);
+                HtmlUtils.setHtml(this.$('.modal-content'), contentHtml);
             },
 
             /**
@@ -146,7 +146,7 @@ define(['jquery', 'underscore', 'gettext', 'js/views/baseview'],
                     name: name,
                     isPrimary: isPrimary
                 });
-                this.getActionBar().find('ul').append(html);
+                HtmlUtils.append(this.getActionBar().find('ul'), html);
             },
 
             /**

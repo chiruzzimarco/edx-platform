@@ -253,7 +253,7 @@
   // large modals - component editors and interactives
   // ------------------------
   .modal-lg {
-    width: 70%;
+    width: 95%;
     min-width: ($baseline*27.5);
     height: auto;
 
@@ -271,7 +271,7 @@
         }
 
         .editor-modes {
-          width: 48%;
+          width: 49%;
           display: inline-block;
 
           @include text-align(right);
@@ -381,10 +381,6 @@
       width: 100%;
       bottom: 0;
     }
-  }
-
-  .modal-type-problem {
-    width: 95%;
   }
 
   // MODAL TYPE: component - video modal (includes special overrides for xblock-related editing view)
