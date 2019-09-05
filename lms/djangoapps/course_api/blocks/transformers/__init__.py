@@ -11,6 +11,7 @@ from .block_counts import BlockCountsTransformer
 from .milestones import MilestonesAndSpecialExamsTransformer
 from .navigation import BlockNavigationTransformer
 from .student_view import StudentViewTransformer
+from .video_urls import VideoBlockURLTransformer
 
 
 class SupportedFieldType(object):
@@ -47,6 +48,7 @@ SUPPORTED_FIELDS = [
     SupportedFieldType('show_correctness'),
     # 'student_view_data'
     SupportedFieldType(StudentViewTransformer.STUDENT_VIEW_DATA, StudentViewTransformer),
+    SupportedFieldType(StudentViewTransformer.STUDENT_VIEW_DATA, VideoBlockURLTransformer),
     # 'student_view_multi_device'
     SupportedFieldType(StudentViewTransformer.STUDENT_VIEW_MULTI_DEVICE, StudentViewTransformer),
 

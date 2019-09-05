@@ -15,6 +15,7 @@ from openedx.core.lib.mobile_utils import is_request_from_mobile_app
 from .serializers import BlockDictSerializer, BlockSerializer
 from .transformers.block_completion import BlockCompletionTransformer
 from .transformers.blocks_api import BlocksAPITransformer
+from .transformers.video_urls import VideoBlockURLTransformer
 from .transformers.milestones import MilestonesAndSpecialExamsTransformer
 
 
@@ -93,7 +94,7 @@ def get_blocks(
 
     # TODO: Remove this after REVE-52 lands and old-mobile-app traffic falls to < 5% of mobile traffic
     if is_request_from_mobile_app(request):
-        transformers += [HideEmptyTransformer()]
+        transformers += [HideEmptyTransformer(), VideoBlockURLTransformer()]
 
     transformers += [
         BlocksAPITransformer(
