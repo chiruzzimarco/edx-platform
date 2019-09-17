@@ -32,18 +32,20 @@ class VideoBlockURLTransformer(BlockStructureTransformer):
         """
         collect video block's student view data.
         """
-        for block_key in block_structure.post_order_traversal(
+        for block_key in block_structure.topological_traversal(
             filter_func=lambda block_key: block_key.block_type == 'video',
             yield_descendants_of_unyielded=True,
         ):
             xblock = block_structure.get_xblock(block_key)
-            block_structure.set_transformer_block_field(block_key, cls, cls.STUDENT_VIEW_DATA, xblock.student_view_data())
+            block_structure.set_transformer_block_field(
+                block_key, cls, cls.STUDENT_VIEW_DATA, xblock.student_view_data()
+            )
 
     def transform(self, usage_info, block_structure):
         """
         Re-write all the video blocks' encoded videos URLs.
         """
-        for block_key in block_structure.post_order_traversal(
+        for block_key in block_structure.topological_traversal(
             filter_func=lambda block_key: block_key.block_type == 'video',
             yield_descendants_of_unyielded=True,
         ):
