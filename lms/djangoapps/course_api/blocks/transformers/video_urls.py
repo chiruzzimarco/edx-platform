@@ -22,6 +22,7 @@ class VideoBlockURLTransformer(BlockStructureTransformer):
 
     WRITE_VERSION = 1
     READ_VERSION = 1
+    STUDENT_VIEW_DATA = 'student_view_data'
 
     def __init__(self):
         self.cdn_url = getattr(settings, 'VIDEO_CDN_URL', {}).get('default', 'https://edx-video.net')
@@ -32,22 +33,24 @@ class VideoBlockURLTransformer(BlockStructureTransformer):
         collect video block's student view data.
         """
         for block_key in block_structure.post_order_traversal(
-            filter_func=lambda block_key: block_key.block_type == 'video'
+            filter_func=lambda block_key: block_key.block_type == 'video',
+            yield_descendants_of_unyielded=True,
         ):
             xblock = block_structure.get_xblock(block_key)
-            block_structure.set_transformer_block_field(block_key, cls, 'student_view_data', xblock.student_view_data())
+            block_structure.set_transformer_block_field(block_key, cls, cls.STUDENT_VIEW_DATA, xblock.student_view_data())
 
     def transform(self, usage_info, block_structure):
         """
         Re-write all the video blocks' encoded videos URLs.
         """
         for block_key in block_structure.post_order_traversal(
-            filter_func=lambda block_key: block_key.block_type == 'video'
+            filter_func=lambda block_key: block_key.block_type == 'video',
+            yield_descendants_of_unyielded=True,
         ):
             student_view_data = block_structure.get_transformer_block_field(
-                block_key, self, 'student_view_data'
+                block_key, self, self.STUDENT_VIEW_DATA
             )
             encoded_videos = student_view_data['encoded_videos']
             for video_data in six.itervalues(encoded_videos):
                 video_data['url'] = rewrite_video_url(self.cdn_url, video_data['url'])
-            block_structure.set_transformer_block_field(block_key, self, 'student_view_data', student_view_data)
+            block_structure.set_transformer_block_field(block_key, self, self.STUDENT_VIEW_DATA, student_view_data)
