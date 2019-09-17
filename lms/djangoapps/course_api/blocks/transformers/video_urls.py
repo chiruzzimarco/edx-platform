@@ -24,17 +24,16 @@ class VideoBlockURLTransformer(BlockStructureTransformer):
     READ_VERSION = 1
 
     def __init__(self):
-        self.cdn_url = 'https://edx-video.net'
-        # self.cdn_url = getattr(settings, 'VIDEO_CDN_URL', {}).get('default')
+        self.cdn_url = getattr(settings, 'VIDEO_CDN_URL', {}).get('default', 'https://edx-video.net')
 
     @classmethod
     def collect(cls, block_structure):
         """
         collect video block's student view data.
         """
-        for block_key in block_structure:
-            if block_key.block_type != 'video':
-                continue
+        for block_key in block_structure.post_order_traversal(
+            filter_func=lambda block_key: block_key.block_type == 'video'
+        ):
             xblock = block_structure.get_xblock(block_key)
             block_structure.set_transformer_block_field(block_key, cls, 'student_view_data', xblock.student_view_data())
 
@@ -42,9 +41,9 @@ class VideoBlockURLTransformer(BlockStructureTransformer):
         """
         Re-write all the video blocks' encoded videos URLs.
         """
-        for block_key in block_structure:
-            if block_key.block_type != 'video':
-                continue
+        for block_key in block_structure.post_order_traversal(
+            filter_func=lambda block_key: block_key.block_type == 'video'
+        ):
             student_view_data = block_structure.get_transformer_block_field(
                 block_key, self, 'student_view_data'
             )
