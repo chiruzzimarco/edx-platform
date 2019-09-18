@@ -9,7 +9,7 @@ from lms.djangoapps.course_blocks.transformers.access_denied_filter import Acces
 from lms.djangoapps.course_blocks.transformers.hidden_content import HiddenContentTransformer
 from lms.djangoapps.course_blocks.transformers.hide_empty import HideEmptyTransformer
 from openedx.core.djangoapps.content.block_structure.transformers import BlockStructureTransformers
-from openedx.core.djangoapps.waffle_utils import WaffleFlag, WaffleFlagNamespace
+from openedx.core.djangoapps.waffle_utils import CourseWaffleFlag, WaffleFlag, WaffleFlagNamespace
 from openedx.core.lib.mobile_utils import is_request_from_mobile_app
 
 from .serializers import BlockDictSerializer, BlockSerializer
@@ -17,6 +17,21 @@ from .transformers.block_completion import BlockCompletionTransformer
 from .transformers.blocks_api import BlocksAPITransformer
 from .transformers.video_urls import VideoBlockURLTransformer
 from .transformers.milestones import MilestonesAndSpecialExamsTransformer
+
+# Waffle Switches for course blocks api
+COURSE_BLOCKS_API_NAMESPACE = WaffleFlagNamespace(name=u'course_blocks_api')
+
+hide_access_denials_flag = WaffleFlag(
+    waffle_namespace=COURSE_BLOCKS_API_NAMESPACE,
+    flag_name=u'hide_access_denials',
+    flag_undefined_default=False
+)
+
+ENABLE_VIDEO_URL_REWRITE = CourseWaffleFlag(
+    waffle_namespace=COURSE_BLOCKS_API_NAMESPACE,
+    flag_name="enable_video_url_rewrite",
+    flag_undefined_default=False
+)
 
 
 def get_blocks(
@@ -62,12 +77,6 @@ def get_blocks(
             attached.
     """
 
-    course_blocks_namespace = WaffleFlagNamespace(name=u'course_blocks_api')
-    hide_access_denials_flag = WaffleFlag(
-        waffle_namespace=course_blocks_namespace,
-        flag_name=u'hide_access_denials',
-        flag_undefined_default=False
-    )
     if hide_access_denials_flag.is_enabled():
         hide_access_denials = True
 
@@ -94,7 +103,9 @@ def get_blocks(
 
     # TODO: Remove this after REVE-52 lands and old-mobile-app traffic falls to < 5% of mobile traffic
     if is_request_from_mobile_app(request):
-        transformers += [HideEmptyTransformer(), VideoBlockURLTransformer()]
+        transformers += [HideEmptyTransformer()]
+        if ENABLE_VIDEO_URL_REWRITE.is_enabled(usage_key.course_key):
+            transformers += [VideoBlockURLTransformer()]
 
     transformers += [
         BlocksAPITransformer(
