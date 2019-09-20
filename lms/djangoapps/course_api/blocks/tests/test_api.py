@@ -13,13 +13,14 @@ from mock import patch
 
 from openedx.core.djangoapps.content.block_structure.api import clear_course_from_cache
 from openedx.core.djangoapps.content.block_structure.config import STORAGE_BACKING_FOR_CACHE, waffle
+from openedx.core.djangoapps.waffle_utils.testutils import override_waffle_flag
 from student.tests.factories import UserFactory
 from xmodule.modulestore import ModuleStoreEnum
 from xmodule.modulestore.tests.django_utils import SharedModuleStoreTestCase
 from xmodule.modulestore.tests.factories import SampleCourseFactory, check_mongo_calls
 from xmodule.modulestore.tests.sample_courses import BlockInfo
 
-from ..api import get_blocks
+from ..api import ENABLE_VIDEO_URL_REWRITE, get_blocks
 
 
 class TestGetBlocks(SharedModuleStoreTestCase):
@@ -131,6 +132,7 @@ class TestGetBlocksMobileHack(SharedModuleStoreTestCase):
                         BlockInfo('full_sequential', 'sequential', {}, [
                             BlockInfo('full_vertical', 'vertical', {}, [
                                 BlockInfo('html', 'html', {}, []),
+                                BlockInfo('sample_video', 'video', {}, [])
                             ]),
                         ]),
                     ])
@@ -155,6 +157,33 @@ class TestGetBlocksMobileHack(SharedModuleStoreTestCase):
         empty_container_key = self.course.id.make_usage_key(container_type, 'empty_{}'.format(container_type))
         assert_containment = self.assertNotIn if is_mobile else self.assertIn
         assert_containment(str(empty_container_key), blocks['blocks'])
+
+    @override_waffle_flag(ENABLE_VIDEO_URL_REWRITE, True)
+    @patch('xmodule.video_module.VideoBlock.student_view_data')
+    def test_video_urls_rewrite(self, video_data_patch):
+        """
+        Verify the video blocks returned have their URL re-written for
+        encoded videos.
+        """
+        video_data_patch.return_value = {
+            'encoded_videos': {
+                'hls': {
+                    'url': 'https://xyz123.cloudfront.net/XYZ123ABC.mp4',
+                    'file_size': 0
+                },
+                'mobile_low': {
+                    'url': 'https://1234abcd.cloudfront.net/ABCD1234abcd.mp4',
+                    'file_size': 0
+                }
+            }
+        }
+        with patch('lms.djangoapps.course_api.blocks.api.is_request_from_mobile_app', return_value=True):
+            blocks = get_blocks(self.request, self.course.location, requested_fields=['student_view_data'])
+
+        video_block_key = str(self.course.id.make_usage_key('video', 'sample_video'))
+        video_block_data = blocks['blocks'][video_block_key]
+        for video_data in six.itervalues(video_block_data['student_view_data']['encoded_videos']):
+            self.assertNotIn('cloudfront', video_data['url'])
 
 
 @ddt.ddt

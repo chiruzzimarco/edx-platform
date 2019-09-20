@@ -65,5 +65,3 @@ class VideoBlockURLTransformer(BlockStructureTransformer):
                 if video_format in self.video_format_exceptions:
                     continue
                 video_data['url'] = rewrite_video_url(self.cdn_url, video_data['url'])
-
-            block_structure.set_transformer_block_field(block_key, self, self.STUDENT_VIEW_DATA, student_view_data)
