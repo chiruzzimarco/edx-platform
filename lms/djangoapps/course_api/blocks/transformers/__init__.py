@@ -48,7 +48,7 @@ SUPPORTED_FIELDS = [
     SupportedFieldType('show_correctness'),
     # 'student_view_data'
     SupportedFieldType(StudentViewTransformer.STUDENT_VIEW_DATA, StudentViewTransformer),
-    SupportedFieldType(StudentViewTransformer.STUDENT_VIEW_DATA, VideoBlockURLTransformer),
+    SupportedFieldType(VideoBlockURLTransformer.STUDENT_VIEW_DATA, VideoBlockURLTransformer),
     # 'student_view_multi_device'
     SupportedFieldType(StudentViewTransformer.STUDENT_VIEW_MULTI_DEVICE, StudentViewTransformer),
 

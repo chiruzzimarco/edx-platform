@@ -26,11 +26,12 @@ class VideoBlockURLTransformer(BlockStructureTransformer):
 
     def __init__(self):
         self.cdn_url = getattr(settings, 'VIDEO_CDN_URL', {}).get('default', 'https://edx-video.net')
+        self.video_format_exceptions = ['youtube', 'fallback']
 
     @classmethod
     def collect(cls, block_structure):
         """
-        collect video block's student view data.
+        collect and store video block's student view data.
         """
         for block_key in block_structure.topological_traversal(
             filter_func=lambda block_key: block_key.block_type == 'video',
@@ -44,6 +45,12 @@ class VideoBlockURLTransformer(BlockStructureTransformer):
     def transform(self, usage_info, block_structure):
         """
         Re-write all the video blocks' videos URLs, with YouTube as an exception.
+
+        For the encoded_videos dictionary, all the available video format URLs
+        will be re-written to serve the videos from edx-video.net
+        with YouTube and fallback URL as an exception. Fallback URL is an exception
+        because when there is no video profile data in VAL, the user specified
+        data from all_sources is taken, which can be URL from any CDN.
         """
         for block_key in block_structure.topological_traversal(
             filter_func=lambda block_key: block_key.block_type == 'video',
@@ -53,13 +60,10 @@ class VideoBlockURLTransformer(BlockStructureTransformer):
                 block_key, self, self.STUDENT_VIEW_DATA
             )
             encoded_videos = student_view_data['encoded_videos']
-            all_sources = student_view_data['all_sources']
 
             for video_format, video_data in six.iteritems(encoded_videos):
-                if video_format == "youtube":
+                if video_format in self.video_format_exceptions:
                     continue
                 video_data['url'] = rewrite_video_url(self.cdn_url, video_data['url'])
 
-            for index, video_url in enumerate(all_sources):
-                all_sources[index] = rewrite_video_url(self.cdn_url, video_url)
             block_structure.set_transformer_block_field(block_key, self, self.STUDENT_VIEW_DATA, student_view_data)
