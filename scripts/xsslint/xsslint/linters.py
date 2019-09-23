@@ -54,7 +54,7 @@ class BaseLinter(object):
         """
         with open(file_full_path, 'r') as input_file:
             file_contents = input_file.read()
-            return file_contents.decode(encoding='utf-8')
+            return file_contents
 
     def _load_and_check_file_is_safe(self, file_full_path, lint_function, results):
         """
