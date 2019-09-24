@@ -178,9 +178,9 @@ class TestGetBlocksMobileHack(SharedModuleStoreTestCase):
                 }
             }
         }
-        with patch('lms.djangoapps.course_api.blocks.api.is_request_from_mobile_app', return_value=True):
-            blocks = get_blocks(self.request, self.course.location, requested_fields=['student_view_data'])
-
+        blocks = get_blocks(
+            self.request, self.course.location, requested_fields=['student_view_data'], student_view_data=['video']
+        )
         video_block_key = str(self.course.id.make_usage_key('video', 'sample_video'))
         video_block_data = blocks['blocks'][video_block_key]
         for video_data in six.itervalues(video_block_data['student_view_data']['encoded_videos']):

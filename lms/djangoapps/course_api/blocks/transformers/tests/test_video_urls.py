@@ -10,6 +10,7 @@ from openedx.core.djangoapps.content.block_structure.factory import BlockStructu
 from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
 from xmodule.modulestore.tests.factories import ToyCourseFactory
 
+from ..student_view import StudentViewTransformer
 from ..video_urls import VideoBlockURLTransformer
 
 
@@ -45,14 +46,19 @@ class TestVideoBlockURLTransformer(ModuleStoreTestCase):
         Return the block's student view data after transformation.
         """
         return self.block_structure.get_transformer_block_field(
-            block_key, VideoBlockURLTransformer, VideoBlockURLTransformer.STUDENT_VIEW_DATA
+            block_key, StudentViewTransformer, StudentViewTransformer.STUDENT_VIEW_DATA
         )
 
     def collect_and_transform(self):
         """
         Perform transformer operations.
         """
-        VideoBlockURLTransformer.collect(self.block_structure)
+        StudentViewTransformer.collect(self.block_structure)
+        self.block_structure._collect_requested_xblock_fields()
+        StudentViewTransformer(['video']).transform(
+            usage_info=None,
+            block_structure=self.block_structure,
+        )
         VideoBlockURLTransformer().transform(
             usage_info=None,
             block_structure=self.block_structure,
