@@ -37,4 +37,3 @@ ENABLE_VIDEO_URL_REWRITE = CourseWaffleFlag(
     flag_name="enable_video_url_rewrite",
     flag_undefined_default=False
 )
-
