@@ -20,7 +20,8 @@ from xmodule.modulestore.tests.django_utils import SharedModuleStoreTestCase
 from xmodule.modulestore.tests.factories import SampleCourseFactory, check_mongo_calls
 from xmodule.modulestore.tests.sample_courses import BlockInfo
 
-from ..api import ENABLE_VIDEO_URL_REWRITE, get_blocks
+from ..api import get_blocks
+from ..toggles import ENABLE_VIDEO_URL_REWRITE
 
 
 class TestGetBlocks(SharedModuleStoreTestCase):

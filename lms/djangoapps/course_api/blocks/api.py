@@ -9,29 +9,14 @@ from lms.djangoapps.course_blocks.transformers.access_denied_filter import Acces
 from lms.djangoapps.course_blocks.transformers.hidden_content import HiddenContentTransformer
 from lms.djangoapps.course_blocks.transformers.hide_empty import HideEmptyTransformer
 from openedx.core.djangoapps.content.block_structure.transformers import BlockStructureTransformers
-from openedx.core.djangoapps.waffle_utils import CourseWaffleFlag, WaffleFlag, WaffleFlagNamespace
 from openedx.core.lib.mobile_utils import is_request_from_mobile_app
 
 from .serializers import BlockDictSerializer, BlockSerializer
+from .toggles import ENABLE_VIDEO_URL_REWRITE, HIDE_ACCESS_DENIALS_FLAG
 from .transformers.block_completion import BlockCompletionTransformer
 from .transformers.blocks_api import BlocksAPITransformer
 from .transformers.video_urls import VideoBlockURLTransformer
 from .transformers.milestones import MilestonesAndSpecialExamsTransformer
-
-# Waffle Switches for course blocks api
-COURSE_BLOCKS_API_NAMESPACE = WaffleFlagNamespace(name=u'course_blocks_api')
-
-hide_access_denials_flag = WaffleFlag(
-    waffle_namespace=COURSE_BLOCKS_API_NAMESPACE,
-    flag_name=u'hide_access_denials',
-    flag_undefined_default=False
-)
-
-ENABLE_VIDEO_URL_REWRITE = CourseWaffleFlag(
-    waffle_namespace=COURSE_BLOCKS_API_NAMESPACE,
-    flag_name="enable_video_url_rewrite",
-    flag_undefined_default=False
-)
 
 
 def get_blocks(
@@ -77,7 +62,7 @@ def get_blocks(
             attached.
     """
 
-    if hide_access_denials_flag.is_enabled():
+    if HIDE_ACCESS_DENIALS_FLAG.is_enabled():
         hide_access_denials = True
 
     # create ordered list of transformers, adding BlocksAPITransformer at end.
