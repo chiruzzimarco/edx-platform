@@ -23,13 +23,8 @@ class VideoBlockURLTransformer(BlockStructureTransformer):
     WRITE_VERSION = 1
     READ_VERSION = 1
     STUDENT_VIEW_DATA = 'student_view_data'
+    CDN_URL = getattr(settings, 'VIDEO_CDN_URL', {}).get('default', 'https://edx-video.net')
     VIDEO_FORMAT_EXCEPTIONS = ['youtube', 'fallback']
-
-    def _get_cdn_url(self):
-        """
-        Return the default CDN url defined in the settings.
-        """
-        return getattr(settings, 'VIDEO_CDN_URL', {}).get('default', 'https://edx-video.net')
 
     @classmethod
     def collect(cls, block_structure):
@@ -55,7 +50,6 @@ class VideoBlockURLTransformer(BlockStructureTransformer):
         because when there is no video profile data in VAL, the user specified
         data from all_sources is taken, which can be URL from any CDN.
         """
-        cdn_url = self._get_cdn_url()
         for block_key in block_structure.topological_traversal(
             filter_func=lambda block_key: block_key.block_type == 'video',
             yield_descendants_of_unyielded=True,
@@ -68,4 +62,4 @@ class VideoBlockURLTransformer(BlockStructureTransformer):
             for video_format, video_data in six.iteritems(encoded_videos):
                 if video_format in self.VIDEO_FORMAT_EXCEPTIONS:
                     continue
-                video_data['url'] = rewrite_video_url(cdn_url, video_data['url'])
+                video_data['url'] = rewrite_video_url(self.CDN_URL, video_data['url'])
