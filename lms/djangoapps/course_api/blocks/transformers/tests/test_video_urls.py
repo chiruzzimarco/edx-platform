@@ -54,7 +54,7 @@ class TestVideoBlockURLTransformer(ModuleStoreTestCase):
         Perform transformer operations.
         """
         StudentViewTransformer.collect(self.block_structure)
-        self.block_structure._collect_requested_xblock_fields()
+        self.block_structure._collect_requested_xblock_fields()  # pylint: disable=protected-access
         StudentViewTransformer(['video']).transform(
             usage_info=None,
             block_structure=self.block_structure,
