@@ -153,9 +153,11 @@ class TestModuleI18nService(ModuleStoreTestCase):
         with mock.patch('gettext.translation', return_value=_translator(domain='text', localedir=localedir,
                                                                         languages=[get_language()])):
             i18n_service = self.get_module_i18n_service(self.descriptor)
-            self.assertEqual(i18n_service.ugettext('Hello'), 'Hello')
-            self.assertNotEqual(i18n_service.ugettext('Hello'), 'fr-hello-world')
-            self.assertNotEqual(i18n_service.ugettext('Hello'), 'es-hello-world')
+            gettext_variant = 'ugettext' if six.PY2 else 'gettext'
+
+            self.assertEqual(getattr(i18n_service, gettext_variant)('Hello'), 'Hello')
+            self.assertNotEqual(getattr(i18n_service, gettext_variant)('Hello'), 'fr-hello-world')
+            self.assertNotEqual(getattr(i18n_service, gettext_variant)('Hello'), 'es-hello-world')
 
         translation.activate("fr")
         with mock.patch('gettext.translation', return_value=_translator(domain='text', localedir=localedir,
