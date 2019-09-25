@@ -24,7 +24,9 @@ class BlocksAPITransformer(BlockStructureTransformer):
         BlockDepthTransformer
         BlockNavigationTransformer
 
-    Note: BlockDepthTransformer must be executed before BlockNavigationTransformer.
+    Note:
+        * BlockDepthTransformer must be executed before BlockNavigationTransformer.
+        * StudentViewTransformer must be executed before VideoBlockURLTransformer.
     """
 
     WRITE_VERSION = 1

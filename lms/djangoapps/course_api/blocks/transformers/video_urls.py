@@ -1,5 +1,5 @@
 """
-Video block Transformer
+Video block URL Transformer
 """
 from __future__ import absolute_import
 
@@ -14,7 +14,7 @@ from .student_view import StudentViewTransformer
 
 class VideoBlockURLTransformer(BlockStructureTransformer):
     """
-    Transformer to re-write video urls for the mobile applications
+    Transformer to re-write video urls for the encoded videos
     to server content from edx-video.
     """
 

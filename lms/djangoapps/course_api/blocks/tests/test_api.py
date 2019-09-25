@@ -159,9 +159,11 @@ class TestGetBlocksMobileHack(SharedModuleStoreTestCase):
         assert_containment = self.assertNotIn if is_mobile else self.assertIn
         assert_containment(str(empty_container_key), blocks['blocks'])
 
-    @override_waffle_flag(ENABLE_VIDEO_URL_REWRITE, True)
     @patch('xmodule.video_module.VideoBlock.student_view_data')
-    def test_video_urls_rewrite(self, video_data_patch):
+    @ddt.data(
+        True, False
+    )
+    def test_video_urls_rewrite(self, waffle_flag_value, video_data_patch):
         """
         Verify the video blocks returned have their URL re-written for
         encoded videos.
@@ -178,13 +180,17 @@ class TestGetBlocksMobileHack(SharedModuleStoreTestCase):
                 }
             }
         }
-        blocks = get_blocks(
-            self.request, self.course.location, requested_fields=['student_view_data'], student_view_data=['video']
-        )
+        with override_waffle_flag(ENABLE_VIDEO_URL_REWRITE, waffle_flag_value):
+            blocks = get_blocks(
+                self.request, self.course.location, requested_fields=['student_view_data'], student_view_data=['video']
+            )
         video_block_key = str(self.course.id.make_usage_key('video', 'sample_video'))
         video_block_data = blocks['blocks'][video_block_key]
         for video_data in six.itervalues(video_block_data['student_view_data']['encoded_videos']):
-            self.assertNotIn('cloudfront', video_data['url'])
+            if waffle_flag_value:
+                self.assertNotIn('cloudfront', video_data['url'])
+            else:
+                self.assertIn('cloudfront', video_data['url'])
 
 
 @ddt.ddt
