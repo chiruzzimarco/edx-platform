@@ -6,6 +6,7 @@ from __future__ import absolute_import
 
 from mock import patch, Mock
 import ddt
+import six
 
 from django.test import TestCase
 from django.test.utils import override_settings
@@ -263,15 +264,15 @@ class TestCsrfCrossDomainCookieMiddleware(TestCase):
         """Check that the cross-domain CSRF cookie was sent. """
         if is_set:
             self.assertIn(self.COOKIE_NAME, response.cookies)
-            cookie_header = str(response.cookies[self.COOKIE_NAME])
+            cookie_header = six.text_type(response.cookies[self.COOKIE_NAME])
 
-            expected = b'Set-Cookie: {name}={value}; Domain={domain};'.format(
+            expected = 'Set-Cookie: {name}={value}; Domain={domain};'.format(
                 name=self.COOKIE_NAME,
                 value=self.COOKIE_VALUE,
                 domain=self.COOKIE_DOMAIN
             )
             self.assertIn(expected, cookie_header)
-            self.assertIn('Max-Age=31449600; Path=/; secure', cookie_header)
+            self.assertIn('Max-Age=31449600; Path=/; secure'.lower(), cookie_header.lower())
 
         else:
             self.assertNotIn(self.COOKIE_NAME, response.cookies)
