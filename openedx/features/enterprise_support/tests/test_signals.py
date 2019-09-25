@@ -125,3 +125,4 @@ class EnterpriseSupportSignals(TestCase):
                 'course_run_id': self.course_id
             }
             mock_task_apply.assert_called_once_with(kwargs=task_kwargs)
+            COURSE_GRADE_NOW_PASSED.connect(dispatch_uid='new_passing_learner')
